@@ -23,12 +23,46 @@ public class CustomerDAOImlp implements CustomerDAO {
 		Session session = sessionFactory.getCurrentSession();
 
 		// create a query
-		Query<Customer> query = session.createQuery("from Customer", Customer.class);
+		Query<Customer> query = session.createQuery("from Customer order by lastName", Customer.class);
 
 		// execute query and get the result
 		List<Customer> customers = query.getResultList();
 
 		return customers;
+	}
+
+	@Override
+	public void saveCustomer(Customer customer) {
+
+		// get the current hibernate session
+		Session session = sessionFactory.getCurrentSession();
+
+		// save/update customer
+		session.saveOrUpdate(customer);
+	}
+
+	@Override
+	public Customer getCustomer(int theId) {
+
+		// get the current hibernate session
+		Session session = sessionFactory.getCurrentSession();
+
+		Customer customer = session.get(Customer.class, theId);
+
+		return customer;
+	}
+
+	@Override
+	public void deleteCustomer(int id) {
+
+		// get the current hibernate session
+		Session session = sessionFactory.getCurrentSession();
+
+		Query query = session.createQuery("delete from Customer where id=:customerId");
+		query.setParameter("customerId", id);
+
+		query.executeUpdate();
+
 	}
 
 }
